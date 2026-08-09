@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Offline AI Resume Analyzer</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- ================================================= -->
+    <!-- HEADER -->
+    <!-- ================================================= -->
+
+    <header class="page-header">
+
+        <h1>🤖 Offline AI Resume Analyzer</h1>
+
+        <p class="subtitle">
+            Professional AI Resume Analysis & Job Matching Dashboard
+        </p>
+
+        <p class="analysis-time">
+            🕒 Analysis Date: {{ analysis_date }}
+        </p>
+
+    </header>
+
+
+    <!-- ================================================= -->
+    <!-- TOP DASHBOARD -->
+    <!-- ================================================= -->
+
+    <div class="dashboard">
+
+        <!-- Resume File -->
+
+        <div class="card">
+
+            <h3>📄 Resume File</h3>
+
+            <p>
+                {{ filename }}
+            </p>
+
+        </div>
+
+
+        <!-- ATS Score -->
+
+        <div class="card">
+
+            <h3>⭐ ATS Resume Score</h3>
+
+            <div class="score">
+                {{ score }}/100
+            </div>
+
+            <div class="progress">
+
+                <div class="progress-fill"
+                     style="width: {{ score }}%;">
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Resume Rating -->
+
+        <div class="card">
+
+            <h3>🏆 Resume Rating</h3>
+
+            <h2 style="color: {{ quality_color }};">
+
+                {{ quality }}
+
+            </h2>
+
+            <p>
+                Overall Resume Performance
+            </p>
+
+        </div>
+
+
+        <!-- Job Match -->
+
+        <div class="card">
+
+            <h3>🎯 AI Job Match Score</h3>
+
+            <div class="score">
+
+                {{ match_score }}%
+
+            </div>
+
+            <div class="progress">
+
+                <div class="progress-fill"
+                     style="width: {{ match_score }}%;">
+
+                </div>
+
+            </div>
+
+            <p>
+                <strong>
+                    {{ hybrid_match_level }}
+                </strong>
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ================================================= -->
+    <!-- RESUME DASHBOARD -->
+    <!-- ================================================= -->
+
+    <section class="section">
+
+        <h2>📊 Resume Dashboard</h2>
+
+        <table class="dashboard-table">
+
+            <tr>
+                <th>Field</th>
+                <th>Result</th>
+            </tr>
+
+            <tr>
+                <td>ATS Score</td>
+                <td>
+                    {{ score }}/100
+                </td>
+            </tr>
+
+            <tr>
+                <td>Resume Rating</td>
+
+                <td style="color: {{ quality_color }};">
+                    {{ quality }}
+                </td>
+
+            </tr>
+
+            <tr>
+                <td>AI Job Match</td>
+
+                <td>
+                    <strong>
+                        {{ match_score }}%
+                    </strong>
+                </td>
+
+            </tr>
+
+            <tr>
+                <td>Match Level</td>
+
+                <td>
+                    {{ hybrid_match_level }}
+                </td>
+
+            </tr>
+
+            <tr>
+                <td>Skills Found</td>
+
+                <td>
+                    {{ skills|length }}
+                </td>
+
+            </tr>
+
+            <tr>
+                <td>Education</td>
+
+                <td>
+                    {{ education|length }}
+                </td>
+
+            </tr>
+
+            <tr>
+                <td>Experience</td>
+
+                <td>
+                    {{ experience }}
+                </td>
+
+            </tr>
+
+        </table>
+
+    </section>
+
+
+
+    <!-- ================================================= -->
+    <!-- AI JOB MATCHING BREAKDOWN -->
+    <!-- ================================================= -->
+
+    <section class="section">
+
+        <h2>🧠 AI Job Matching Analysis</h2>
+
+        <p>
+            The system compares the resume with the Job Description
+            using NLP-based similarity and AI semantic analysis.
+        </p>
+
+
+        <div class="dashboard">
+
+
+            <!-- TF-IDF -->
+
+            <div class="card">
+
+                <h3>🔤 TF-IDF Similarity</h3>
+
+                <div class="score">
+
+                    {{ tfidf_score }}%
+
+                </div>
+
+                <p>
+                    Keyword and text similarity
+                </p>
+
+            </div>
+
+
+            <!-- Semantic -->
+
+            <div class="card">
+
+                <h3>🧠 Semantic AI Similarity</h3>
+
+                <div class="score">
+
+                    {{ semantic_score }}%
+
+                </div>
+
+                <p>
+                    Meaning-based similarity
+                </p>
+
+            </div>
+
+
+            <!-- Hybrid -->
+
+            <div class="card">
+
+                <h3>🚀 Hybrid AI Score</h3>
+
+                <div class="score">
+
+                    {{ hybrid_score }}%
+
+                </div>
+
+                <p>
+
+                    <strong>
+                        {{ hybrid_match_level }}
+                    </strong>
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ================================================= -->
+    <!-- SKILLS -->
+    <!-- ================================================= -->
+
+    <section class="section">
+
+        <h2>🧠 Skills Detected</h2>
+
+        <div class="skill-box">
+
+            {{ skills_html | safe }}
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ================================================= -->
+    <!-- EDUCATION -->
+    <!-- ================================================= -->
+
+    <section class="section">
+
+        <h2>🎓 Education</h2>
+
+        <div class="education-box">
+
+            {{ education_html | safe }}
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ================================================= -->
+    <!-- EXPERIENCE -->
+    <!-- ================================================= -->
+
+    <section class="section">
+
+        <h2>💼 Experience</h2>
+
+        <div class="experience-box">
+
+            {{ experience }}
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ================================================= -->
+    <!-- SKILL GAP ANALYSIS -->
+    <!-- ================================================= -->
+
+    <section class="section">
+
+        <h2>🎯 Skill Gap Analysis</h2>
+
+
+        <h4>✅ Resume Skills</h4>
+
+        <p>
+
+            {% if resume_skills %}
+
+                {{ resume_skills | join(", ") }}
+
+            {% else %}
+
+                Not Found
+
+            {% endif %}
+
+        </p>
+
+
+        <hr>
+
+
+        <h4>📋 Required Skills</h4>
+
+        <p>
+
+            {% if required_skills %}
+
+                {{ required_skills | join(", ") }}
+
+            {% else %}
+
+                Not Available
+
+            {% endif %}
+
+        </p>
+
+
+        <hr>
+
+
+        <h4>❌ Missing Skills</h4>
+
+        <p>
+
+            {% if missing_skills %}
+
+                {{ missing_skills | join(", ") }}
+
+            {% else %}
+
+                <span style="color: green;">
+                    No Missing Skills 🎉
+                </span>
+
+            {% endif %}
+
+        </p>
+
+    </section>
+
+
+
+    <!-- ================================================= -->
+    <!-- MATCHED KEYWORDS -->
+    <!-- ================================================= -->
+
+    <section class="section">
+
+        <h2>✅ Matched Job Keywords</h2>
+
+        {% if matched_keywords %}
+
+            <div class="keyword-container">
+
+                {% for keyword in matched_keywords %}
+
+                    <span class="keyword matched">
+
+                        ✓ {{ keyword }}
+
+                    </span>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <p>
+                No matching keywords detected.
+            </p>
+
+        {% endif %}
+
+    </section>
+
+
+
+    <!-- ================================================= -->
+    <!-- MISSING KEYWORDS -->
+    <!-- ================================================= -->
+
+    <section class="section">
+
+        <h2>⚠️ Missing Job Keywords</h2>
+
+        {% if missing_keywords %}
+
+            <div class="keyword-container">
+
+                {% for keyword in missing_keywords %}
+
+                    <span class="keyword missing">
+
+                        ✗ {{ keyword }}
+
+                    </span>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <p style="color: green;">
+
+                🎉 No important missing keywords detected.
+
+            </p>
+
+        {% endif %}
+
+    </section>
+
+
+
+    <!-- ================================================= -->
+    <!-- RESUME STRENGTHS -->
+    <!-- ================================================= -->
+
+    <section class="section">
+
+        <h2>💪 Resume Strengths</h2>
+
+        <div class="recommendation-box">
+
+            {% if matched_keywords %}
+
+                <ul>
+
+                    {% for keyword in matched_keywords[:10] %}
+
+                        <li>
+
+                            Strong match with
+                            <strong>{{ keyword }}</strong>
+
+                        </li>
+
+                    {% endfor %}
+
+                </ul>
+
+            {% else %}
+
+                <p>
+                    No specific strengths detected from the Job Description.
+                </p>
+
+            {% endif %}
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ================================================= -->
+    <!-- AREAS FOR IMPROVEMENT -->
+    <!-- ================================================= -->
+
+    <section class="section">
+
+        <h2>⚠️ Areas for Improvement</h2>
+
+        <div class="recommendation-box">
+
+            {% if missing_keywords %}
+
+                <ul>
+
+                    {% for keyword in missing_keywords[:10] %}
+
+                        <li>
+
+                            Consider improving or adding:
+
+                            <strong>{{ keyword }}</strong>
+
+                        </li>
+
+                    {% endfor %}
+
+                </ul>
+
+            {% else %}
+
+                <p style="color: green;">
+
+                    🎉 No major improvement areas detected.
+
+                </p>
+
+            {% endif %}
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ================================================= -->
+    <!-- AI RECOMMENDATIONS -->
+    <!-- ================================================= -->
+
+    <section class="section">
+
+        <h2>🤖 AI Recommendations</h2>
+
+        <div class="recommendation-box">
+
+            {% if recommendations %}
+
+                <ul>
+
+                    {% for recommendation in recommendations %}
+
+                        <li>
+
+                            {{ recommendation }}
+
+                        </li>
+
+                    {% endfor %}
+
+                </ul>
+
+            {% else %}
+
+                <p>
+                    No recommendations available.
+                </p>
+
+            {% endif %}
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ================================================= -->
+    <!-- AI RESUME REVIEW -->
+    <!-- ================================================= -->
+
+    <section class="section">
+
+        <h2>🧠 AI Resume Review</h2>
+
+        <div class="review-box">
+
+            <pre>{{ review }}</pre>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ================================================= -->
+    <!-- RESUME PREVIEW -->
+    <!-- ================================================= -->
+
+    <section class="section">
+
+        <h2>📄 Resume Preview</h2>
+
+        <div class="preview-box">
+
+            <pre>{{ text[:3000] }}</pre>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ================================================= -->
+    <!-- SCORE GRAPH -->
+    <!-- ================================================= -->
+
+    <section class="section">
+
+        <h2>📊 Resume vs Job Score Graph</h2>
+
+        <div class="chart-container">
+
+            <canvas id="scoreChart"></canvas>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ================================================= -->
+    <!-- ANALYSIS METHODOLOGY -->
+    <!-- ================================================= -->
+
+    <section class="section">
+
+        <h2>⚙️ AI Analysis Methodology</h2>
+
+        <div class="recommendation-box">
+
+            <ul>
+
+                <li>
+                    📄 Resume text extraction using PDF processing
+                </li>
+
+                <li>
+                    🔤 NLP text preprocessing
+                </li>
+
+                <li>
+                    📊 TF-IDF vectorization
+                </li>
+
+                <li>
+                    📐 Cosine similarity calculation
+                </li>
+
+                <li>
+                    🧠 Semantic similarity using AI embeddings
+                </li>
+
+                <li>
+                    🎯 Hybrid Resume–Job matching
+                </li>
+
+                <li>
+                    🔎 Keyword and skill-gap analysis
+                </li>
+
+                <li>
+                    🤖 Automated resume recommendations
+                </li>
+
+            </ul>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ================================================= -->
+    <!-- BUTTONS -->
+    <!-- ================================================= -->
+
+    <div class="button-container">
+
+        <a href="/download">
+
+            <button class="download-btn">
+
+                📄 Download PDF Report
+
+            </button>
+
+        </a>
+
+
+        <a href="/">
+
+            <button class="home-btn">
+
+                🔄 Analyze Another Resume
+
+            </button>
+
+        </a>
+
+    </div>
+
+
+
+    <!-- ================================================= -->
+    <!-- FOOTER -->
+    <!-- ================================================= -->
+
+    <footer>
+
+        <hr>
+
+        <p>
+            🤖 Offline AI Resume Analyzer
+        </p>
+
+        <p>
+            Powered by Python • Flask • NLP • Machine Learning • AI
+        </p>
+
+        <p>
+            Developed for IBM Internship & Final Year Project
+        </p>
+
+    </footer>
+
+</div>
+
+
+
+<!-- ===================================================== -->
+<!-- CHART.JS -->
+<!-- ===================================================== -->
+
+<script>
+
+const ctx = document.getElementById("scoreChart");
+
+if (ctx) {
+
+    new Chart(ctx, {
+
+        type: "bar",
+
+        data: {
+
+            labels: [
+                "ATS Score",
+                "Job Match",
+                "TF-IDF",
+                "Semantic AI"
+            ],
+
+            datasets: [{
+
+                label: "Score (%)",
+
+                data: [
+
+                    {{ score|default(0) }},
+
+                    {{ match_score|default(0) }},
+
+                    {{ tfidf_score|default(0) }},
+
+                    {{ semantic_score|default(0) }}
+
+                ]
+
+            }]
+
+        },
+
+        options: {
+
+            responsive: true,
+
+            maintainAspectRatio: false,
+
+            scales: {
+
+                y: {
+
+                    beginAtZero: true,
+
+                    max: 100,
+
+                    title: {
+
+                        display: true,
+
+                        text: "Score (%)"
+
+                    }
+
+                }
+
+            },
+
+            plugins: {
+
+                legend: {
+
+                    display: true
+
+                }
+
+            }
+
+        }
+
+    });
+
+}
+
+</script>
+
+
+</body>
+
+</html>
